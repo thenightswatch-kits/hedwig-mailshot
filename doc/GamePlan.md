@@ -6,6 +6,6 @@ Tasks in hand
 
 Timeline
 - [x] UI/UX Design
-- [ ] Base Code Development
-- [ ] Combining Code Snippets into Final Product
-- [ ] Testing
+- [ ] Base Code Development (by 22nd March, 2023)
+- [ ] Combining Code Snippets into Final Product (23rd - 24th March, 2023)
+- [ ] Testing (25th - 26th March, 2023)
