@@ -1,0 +1,5 @@
+- [ ] UI/UX Design
+- [ ] Front-end
+- [ ] Back-end
+- [ ] Workers and Event Schedulers
+- [ ] SMTPS server configuration
