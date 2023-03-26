@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hedwig',
+        'NAME': 'hedwigbackend',
         'USER': 'hedwiguser',
         'PASSWORD': 'password',
         'HOST': 'localhost',
