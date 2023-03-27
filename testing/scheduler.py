@@ -11,7 +11,7 @@ import time
 
 def email_send():
     send_mail(subject="Test",
-        reciver_email=['issacgladin@karunya.edu.in','issacgladin@gmail.com',]
+        reciver_email=['test1@karunya.edu.in','test2@gmail.com',]
         )
     
 class Scheduler:

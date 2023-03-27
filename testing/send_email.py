@@ -10,11 +10,11 @@ context = ssl.create_default_context()
 # PORT =465
 # EMAIL_SERVER ='mail.spacemonkeys.club'
 
-sender_email = "issacglad11@gmail.com"
-password = "ntbqhvzljocbzuqt"
+sender_email = "SENDER@gmail.com"
+password = "PASSWORD"
 
 # sender_email = "hedwigmailshot@spacemonkeys.club"
-# password = "tnpolice23hedwig"
+# password = "PASS"
 
 #Getting Email Headders
 def send_mail(subject,reciver_email):
@@ -44,6 +44,6 @@ def send_mail(subject,reciver_email):
 if __name__ == "__main__":
     send_mail(
         subject="Test",
-        reciver_email=['issacgladin@gmail.com','kingsle.edwin@gmail.com']
+        reciver_email=['test1@gmail.com','test2@gmail.com']
         
     )        
