@@ -22,8 +22,20 @@ const Form = () => {
     }
     getData();
   }, [])
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = async (values) => {
     console.log(values);
+    // const response = await fetch('http://localhost:8000/api/template', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   credentials: 'include',
+    //   body: JSON.stringify({
+    //     title: values.title,
+    //     template_id: values.template_id,
+    //     type: values.type
+    //   })
+    // });
+    // console.log(response);
+    
   };
 
   return (
@@ -93,7 +105,7 @@ const Form = () => {
                   <MenuItem value={"schedule"}>Schedule</MenuItem>
                   {/* <MenuItem value={"cron"}>Cron Schedule</MenuItem> */}
               </Select>
-              <input type='datetime-local'  onChange={(e)=>{setCDT(e.target.value)}} style={{height:'100%', width:'427%', padding:'4%', color:'white', backgroundColor:'#1F2A40'}}></input>
+              <input type='datetime-local'  onChange={(e)=>{setCDT(e.target.value);console.log(e.target.value)}} style={{height:'100%', width:'427%', padding:'4%', color:'white', backgroundColor:'#1F2A40'}}></input>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
