@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 ./code/backend/venv
-=======
 venv/
 *.pyc
->>>>>>> 1ff26f85ba715529883e9566e9a36df3e3033bd1
+
