@@ -5,7 +5,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -24,18 +24,29 @@ const Form = () => {
   }, [])
   const handleFormSubmit = async (values) => {
     console.log(values);
-    // const response = await fetch('http://localhost:8000/api/template', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   credentials: 'include',
-    //   body: JSON.stringify({
-    //     title: values.title,
-    //     template_id: values.template_id,
-    //     type: values.type
-    //   })
-    // });
-    // console.log(response);
-    
+    let data;
+    if(values.type == 'schedule'){
+      data = JSON.stringify({
+        title: values.title,
+        template_id: values.template_id,
+        type: values.type,
+        schedule_at: cdt
+      })
+    }else{
+      data = JSON.stringify({
+        title: values.title,
+        template_id: values.template_id,
+        type: values.type,
+      })
+    }
+    const response = await fetch('http://localhost:8000/api/campaign/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: data
+    });
+    console.log(response);
+
   };
 
   return (
@@ -87,8 +98,8 @@ const Form = () => {
                 error={!!touched.type && !!errors.type}
                 helperText={touched.type && errors.type}
                 sx={{ gridColumn: "span 4" }}>
-                {templates&&templates.map((e)=>{
-                  return(<MenuItem value={e.id}>{e.title}</MenuItem>)
+                {templates && templates.map((e) => {
+                  return (<MenuItem value={e.id}>{e.title}</MenuItem>)
                 })}
               </Select>
               <Select
@@ -101,11 +112,11 @@ const Form = () => {
                 error={!!touched.type && !!errors.type}
                 helperText={touched.type && errors.type}
                 sx={{ gridColumn: "span 4" }}>
-                  <MenuItem value={"immediate"}>Immediate</MenuItem>
-                  <MenuItem value={"schedule"}>Schedule</MenuItem>
-                  {/* <MenuItem value={"cron"}>Cron Schedule</MenuItem> */}
+                <MenuItem value={"immediate"}>Immediate</MenuItem>
+                <MenuItem value={"schedule"}>Schedule</MenuItem>
+                {/* <MenuItem value={"cron"}>Cron Schedule</MenuItem> */}
               </Select>
-              <input type='datetime-local'  onChange={(e)=>{setCDT(e.target.value);console.log(e.target.value)}} style={{height:'100%', width:'427%', padding:'4%', color:'white', backgroundColor:'#1F2A40'}}></input>
+              <input type='datetime-local' onChange={(e) => { setCDT(e.target.value); console.log(e.target.value) }} style={{ height: '100%', width: '427%', padding: '4%', color: 'white', backgroundColor: '#1F2A40' }}></input>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">

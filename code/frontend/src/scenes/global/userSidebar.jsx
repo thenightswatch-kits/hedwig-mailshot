@@ -55,7 +55,6 @@ const Sidebar = ({user}) => {
         "& .pro-menu-item.active": {
           color: "#6870fa !important",
         },
-        position:'sticky'
       }}
     >
       <ProSidebar collapsed={isCollapsed} sticky>

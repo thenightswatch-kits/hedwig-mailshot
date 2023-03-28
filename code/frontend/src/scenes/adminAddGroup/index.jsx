@@ -5,12 +5,26 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
+import { useNavigate } from "react-router-dom";
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  const handleFormSubmit = (values) => {
+  const navigate = useNavigate()
+
+  const handleFormSubmit = async (values) => {
     console.log(values);
+    const response = await fetch('http://localhost:8000/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        permission: values.permission
+      })
+    });
+    navigate(0)
   };
 
   return (
@@ -55,7 +69,7 @@ const Form = () => {
               <TextField
                 fullWidth
                 variant="filled"
-                type="text"
+                type="password"
                 label="Password"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -84,7 +98,7 @@ const Form = () => {
                 label="Type of User"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                name="type"
+                name="permission"
                 error={!!touched.type && !!errors.type}
                 helperText={touched.type && errors.type}
                 sx={{ gridColumn: "span 4" }}>
@@ -113,21 +127,13 @@ const checkoutSchema = yup.object().shape({
   name: yup.string().required("required"),
   password: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
-  type: yup.string().required("required"),
-  contact: yup
-    .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("required"),
-  address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
+  permission: yup.string().required("required"),
 });
 const initialValues = {
-  firstName: "",
-  lastName: "",
+  name: "",
   email: "",
-  contact: "",
-  address1: "",
-  address2: "",
+  password: "",
+  permission: "",
 };
 
 export default Form;

@@ -14,44 +14,80 @@ import StatBox from "../../components/StatBox";
 import { mockDataContacts } from "../../data/mockData";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import ProgressCircle from "../../components/ProgressCircle";
+import { useEffect, useState } from "react";
 
 const AdminDashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  const [campaign, setCampaign] = useState();
+  const [group, setGroup] = useState(); 
+  useEffect(() => {
+    const getCampaignData = async () => {
+      const response = await fetch('http://localhost:8000/api/campaign/', {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const res = await response.json();
+      setCampaign(res.filter((e)=>{
+        if(e.status != 'pending'){
+          return e
+        }
+      }))
+      console.log(res)
+    }
+    const getGroupData = async () => {
+      const response = await fetch('http://localhost:8000/api/group', {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const res = await response.json();
+      console.log(res)
+      setGroup(res)
+    }
+    
+    getGroupData();
+    getCampaignData();
+  }, [])
+  
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Campaign ID" },
+
     {
-      field: "name",
-      headerName: "Name",
+      field: "title",
+      headerName: "title",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "  ",
+      field: "user_id",
       headerName: "User",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "phone",
-      headerName: "Emails",
+      field: "template_id",
+      headerName: "Template",
       flex: 1,
     },
     {
-      field: "email",
-      headerName: "Schedule Date",
+      field: "type",
+      headerName: "Type",
       flex: 1,
     },
     {
-      field: "address",
-      headerName: "Progress",
+      field: "started_at",
+      headerName: "Started At",
       flex: 1,
     },
     {
-      field: "city",
-      headerName: "Fail Ratio",
+      field: "ended_at",
+      headerName: "Ended At",
+      flex: 1,
+    },
+    {
+      field: "status",
+      headerName: "Status",
       flex: 1,
     },
     {
@@ -116,7 +152,7 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
+            title="2"
             subtitle="Total Campaigns"
             progress="1"
             // increase="+14%"
@@ -135,7 +171,7 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="431,225"
+            title="0"
             subtitle="Approval Pending"
             progress="0.10"
             // increase="+21%"
@@ -154,7 +190,7 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
+            title="3"
             subtitle="Campaigns Sent"
             progress="0.30"
             // increase="+5%"
@@ -244,7 +280,7 @@ const AdminDashboard = () => {
               Groups
             </Typography>
           </Box>
-          {mockTransactions.map((transaction, i) => (
+          {group&&group.map((transaction, i) => (
             <Box
               key={`${transaction.txId}-${i}`}
               display="flex"
@@ -262,16 +298,16 @@ const AdminDashboard = () => {
                   {transaction.txId}
                 </Typography>
                 <Typography color={colors.grey[100]}>
-                  {transaction.user}
+                  {transaction.name}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
+              <Box color={colors.grey[100]}>1000</Box>
               <Box
                 backgroundColor={colors.greenAccent[500]}
                 p="5px 10px"
                 borderRadius="4px"
               >
-                {transaction.cost}
+                {transaction.permission}
               </Box>
             </Box>
           ))}
@@ -313,11 +349,13 @@ const AdminDashboard = () => {
           },
         }}
       >
-        <DataGrid
-          rows={mockDataContacts}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
-        />
+        {campaign&&(
+                  <DataGrid
+                  rows={campaign}
+                  columns={columns}
+                  components={{ Toolbar: GridToolbar }}
+                />
+        )}
       </Box>
     </Box>
     </Box>

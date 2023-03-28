@@ -9,17 +9,25 @@ import Popover from '@mui/material/Popover';
 import LogoutIcon from '@mui/icons-material/Logout';
 import React from "react";
 import { Typography } from "@mui/material";
-
+import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = async(event) => {
+    
+    const response = await fetch('http://localhost:8000/api/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    });
+    console.log(response)
+    navigate(0)
   };
 
   const handleClose = () => {
@@ -69,8 +77,8 @@ const Topbar = () => {
         {/* <IconButton>
           <SettingsOutlinedIcon />
         </IconButton> */}
-        <IconButton onClick={handleClick}>
-          <PersonOutlinedIcon />
+        <IconButton onClick={()=>{handleClick()}}>
+          <LogoutIcon/>
         </IconButton>
       </Box>
     </Box>

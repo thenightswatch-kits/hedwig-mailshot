@@ -16,7 +16,7 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-
+import Logo from '../../user.png'
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -61,7 +61,7 @@ const AdminSidebar = () => {
         },
       }}
     >
-      <ProSidebar collapsed={isCollapsed} sticky>
+      <ProSidebar collapsed={isCollapsed} sticky={true}>
         <Menu iconShape="square">
           {/* LOGO AND MENU ICON */}
           <MenuItem
@@ -96,7 +96,7 @@ const AdminSidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={`../../assets/user.png`}
+                  src={Logo}
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -172,6 +172,21 @@ const AdminSidebar = () => {
               title="Add Groups"
               to="/addgroup"
               icon={<CalendarTodayOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+<Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              Recipients
+            </Typography>
+            <Item
+              title="Manage Recipients"
+              to="/recipients"
+              icon={<PersonOutlinedIcon />} 
               selected={selected}
               setSelected={setSelected}
             />

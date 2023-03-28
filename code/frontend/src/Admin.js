@@ -7,6 +7,7 @@ import AdminApproval from "./scenes/adminApproval";
 import AdminGroups from "./scenes/adminGroups";
 import AdminAddGroups from "./scenes/adminAddGroup";
 import AdminCampaign from "./scenes/adminCampaigns";
+import AdminRecipients from "./scenes/adminRecipients";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 
@@ -28,6 +29,7 @@ function Admin() {
               <Route path="/groups" element={<AdminGroups />} />
               <Route path="/addgroup" element={<AdminAddGroups />} />
               <Route path="/campaigns" element={<AdminCampaign />} />
+              <Route path="/recipients" element={<AdminRecipients/>} />
             </Routes>
           </main>
         </div>

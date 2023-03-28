@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
@@ -8,8 +8,9 @@ import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
 import { useState, useEffect, forceUpdate } from "react";
 import { useNavigate } from "react-router-dom";
+import Papa from "papaparse";
 
-const AdminApproval = () => {
+const AdminRecipients = () => {
   const navigate = useNavigate()
 
   const theme = useTheme();
@@ -17,16 +18,12 @@ const AdminApproval = () => {
   const [campaign, setCampaign] = useState();
   useEffect(() => {
     const getCampaignData = async () => {
-      const response = await fetch('http://localhost:8000/api/campaign/', {
+      const response = await fetch('http://localhost:8000/api/recipients/', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
       const res = await response.json();
-      setCampaign(res.filter((e)=>{
-        if(e.status == 'pending'){
-          return e
-        }
-      }))
+      setCampaign(res)
       console.log(res)
     }
     getCampaignData();
@@ -34,99 +31,100 @@ const AdminApproval = () => {
 
 
 
-  const handleApprove = async (id, status) =>{
-    const data = JSON.stringify({'id':id,'status':status})
-    const respones = await fetch('http://localhost:8000/api/campaign/approve/',{
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: data
-    })
-    navigate(0)
-  }
+  const changeHandler = (event) => {
+    // Passing file data (event.target.files[0]) to parse using Papa.parse
+    Papa.parse(event.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        console.log(results.data)
+        results.data.map(async (e) => {
+          console.log(e)
+          e['failed'] = 0
+          const response = await fetch('http://localhost:8000/api/recipients/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(e)
+          });
+          console.log(response)
+        })
+      },
+    });
+  };
 
 
   const columns = [
-    { field: "id", headerName: "Campaign ID" },
+    { field: "id", headerName: "ID" },
     {
-      field: "title",
-      headerName: "Title",
+      field: "name",
+      headerName: "Name",
       flex: 0.5,
       cellClassName: "name-column--cell",
     },
     {
-      field: "user_id",
-      headerName: "User",
+      field: "email",
+      headerName: "E mail",
       headerAlign: "left",
       align: "left",
       flex: 0.5,
     },
     {
-      field: "type",
-      headerName: "Type",
+      field: "state",
+      headerName: "State",
       flex: 0.5,
     },
     {
-      field: "total_mail",
-      headerName: "Total Mail",
+      field: "district",
+      headerName: "District",
       flex: 0.5,
-    }, 
+    },
+    {
+      field: "taluk",
+      headerName: "Taluk",
+      flex: 0.5,
+    },
+    {
+      field: "failed",
+      headerName: "Failed",
+      flex: 0.5,
+    },
+    {
+      field: "dob",
+      headerName: "DOB",
+      flex: 0.5,
+    },
+    {
+      field: "gender",
+      headerName: "Gender",
+      flex: 0.5,
+    },
     {
       field: "status",
-      headerName: "Total Mail",
+      headerName: "Status",
       flex: 0.5,
     },
-    {
-      field: "accessLevel",
-      headerName: "",
-      flex: 0.4,
-      renderCell: ({ row: { id } }) => {
-        return (
-          <Box
-            width="100%"
-            m="0 auto"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={colors.greenAccent[600]}
-            borderRadius="4px"
-          >
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }} onClick={()=>{handleApprove(id,'approved')}}>
-              Approve
-            </Typography>
-          </Box>
-        );
-      },
-    },
-    {
-      field: "    ",
-      headerName: "",
-      flex: 0.4,
-      renderCell: ({ row: { id } }) => {
-        return (
-          <Box
-            width="100%"
-            m="0 auto"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={colors.greenAccent[600]}
-            borderRadius="4px"
-          >
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }} onClick={()=>{handleApprove(id,'rejected')}}>
-              Reject
-            </Typography>
-          </Box>
-        );
-      },
-    },
   ];
-  if(campaign){
+  if (campaign) {
     return (
       <Box m="20px">
-        <Header title="APPROVAL REQUESTS" subtitle="Managing the approval requests" />
+        <Box mr="20px" sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Header title="RECIPIENTS" subtitle="Managing the recipient email sets" />
+          <label htmlFor="upload-photo">
+            <input onChange={changeHandler}
+              style={{ display: 'none' }}
+              id="upload-photo"
+              name="upload-photo"
+              type="file"
+            />
+
+            <Button color="secondary" variant="contained" component="span">
+              Upload CSV
+            </Button>
+          </label>
+        </Box>
         <Box
-          m="40px 0 0 0"
+          m="10px 0 0 0"
           height="75vh"
           sx={{
             "& .MuiDataGrid-root": {
@@ -161,4 +159,4 @@ const AdminApproval = () => {
   }
 };
 
-export default AdminApproval;
+export default AdminRecipients;
