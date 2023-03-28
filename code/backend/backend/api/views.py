@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer, CampaignSerializer, TemplateSerializer
-from .models import User, Campaign, MailTemplate
+from .serializers import UserSerializer, CampaignSerializer, TemplateSerializer, RecipientSerializer
+from .models import User, Campaign, MailTemplate, Recipients
 import jwt, datetime
+from .util import *
 
 SECRET = '2egfi2h9urawdjfn'
 
@@ -32,7 +33,7 @@ class LoginView(APIView):
 
         payload = {
             'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=240),
             'iat': datetime.datetime.utcnow()
         }
 
@@ -67,6 +68,7 @@ class UserView(APIView):
 
 class LogoutView(APIView):
     def post(self, request):
+        print("***")
         response = Response()
         response.delete_cookie('jwt')
         response.data = {
@@ -110,10 +112,14 @@ class CampaignView(APIView):
         user = User.objects.filter(id=payload['id']).first()
         data = request.data
         data['user_id'] = user.id
+        if(request.data['type'] == 'immediate'):
+            data['schedule_at'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+            data['started_at'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         serializer = CampaignSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    
 
 
 #Group View
@@ -140,6 +146,7 @@ class GroupView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    
 
 class TemplateView(APIView):
     def get(self, request):
@@ -176,3 +183,74 @@ class TemplateView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class ApproveView(APIView):
+    def post(self, request):
+        print(request.data)
+        token = request.COOKIES.get('jwt')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+        try:
+            payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+        user = User.objects.filter(id=payload['id']).first()
+        print(user.permission)
+        serializer = UserSerializer(user)
+        if(user.permission == 'admin'):
+            data = request.data
+            campaign = Campaign.objects.filter(id=data['id'])
+            campaign.update(status=data['status'])
+            if(data['status']=='immediate'):
+                send_mail(data['id'])
+            return Response ("Updated")
+        
+
+class RecipientView(APIView):
+    def get(self, request):
+        print(request.data)
+        token = request.COOKIES.get('jwt')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+        try:
+            payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+        user = User.objects.filter(id=payload['id']).first()
+        print(user.permission)
+        serializer = UserSerializer(user)
+        if(user.permission == 'admin'):
+            group = Recipients.objects.all()
+            group_serializer = RecipientSerializer(group, many=True)
+            return Response(group_serializer.data)
+        return Response(serializer.data)
+    def post(self, request):
+        print(request.data)
+        token = request.COOKIES.get('jwt')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+        try:
+            payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+        user = User.objects.filter(id=payload['id']).first()
+        print(user.permission)
+        serializer = UserSerializer(user)
+        if(user.permission == 'admin'):
+            recipient = RecipientSerializer(data=request.data)
+            recipient.is_valid(raise_exception=True)
+            recipient.save()
+            return Response(recipient.data)
+
+# class EchoView(APIView):
+    # def post(self, request):
+    #     for i in request.data:
+    #         name = i["name"]
+    #         subject = i["subject"]
+    #         message = i["message"]
+    #         message = message.replace("{%name%}",name)
+    #         subject = subject.replace("{%name%}",name)
+    #         reciever = i["reciever"]
+    #         os.system(f'echo -e "Subject:{subject} \n\n {message}\n" | sendmail {reciever}')
+    #     return Response("Successful")

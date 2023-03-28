@@ -15,7 +15,7 @@ class User(AbstractUser):
 
 class Recipients(models.Model):
     name = models.CharField(max_length=100, )
-    email = models.CharField(max_length=200)
+    email = models.CharField(max_length=200, unique=True)
     state = models.CharField(max_length=200)
     district = models.CharField(max_length=200)
     taluk = models.CharField(max_length=200)

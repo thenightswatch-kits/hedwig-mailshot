@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Campaign, MailTemplate
+from .models import User, Campaign, MailTemplate, Recipients
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,3 +29,9 @@ class TemplateSerializer(serializers.ModelSerializer):
         model = MailTemplate
         fields = "__all__"
         db_table = "mail_template"
+
+class RecipientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipients
+        fields = "__all__"
+        db_table = "recipients"
