@@ -20,6 +20,7 @@ const Form = () => {
       })
     });
     console.log(response);
+    navigate(0)
   };
 
   return (

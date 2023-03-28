@@ -6,8 +6,10 @@ import Header from "../../components/Header";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Form = () => {
+  const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [cdt, setCDT] = useState();
   const [templates, setTemplates] = useState();
@@ -45,7 +47,7 @@ const Form = () => {
       credentials: 'include',
       body: data
     });
-    console.log(response);
+    navigate(0)
 
   };
 

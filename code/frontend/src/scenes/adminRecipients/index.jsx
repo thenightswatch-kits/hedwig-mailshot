@@ -49,6 +49,7 @@ const AdminRecipients = () => {
           });
           console.log(response)
         })
+        navigate(0)
       },
     });
   };
