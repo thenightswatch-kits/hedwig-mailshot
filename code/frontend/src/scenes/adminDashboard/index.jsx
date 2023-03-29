@@ -21,10 +21,11 @@ const AdminDashboard = () => {
   const colors = tokens(theme.palette.mode);
 
   const [campaign, setCampaign] = useState();
-  const [group, setGroup] = useState(); 
+  const [group, setGroup] = useState();
+  const [stats, setStats] = useState();
   useEffect(() => {
     const getCampaignData = async () => {
-      const response = await fetch('http://localhost:8000/api/campaign/', {
+      const response = await fetch('http://45.79.120.122:8000/api/campaign/', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
@@ -37,7 +38,7 @@ const AdminDashboard = () => {
       console.log(res)
     }
     const getGroupData = async () => {
-      const response = await fetch('http://localhost:8000/api/group', {
+      const response = await fetch('http://45.79.120.122:8000/api/group', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
@@ -45,9 +46,19 @@ const AdminDashboard = () => {
       console.log(res)
       setGroup(res)
     }
+    const getStatsData = async () => {
+      const response = await fetch('http://45.79.120.122:8000/api/stats/', {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const res = await response.json();
+      console.log(res)
+      setStats(res)
+    }
     
     getGroupData();
     getCampaignData();
+    getStatsData()
   }, [])
   
   const columns = [
@@ -144,6 +155,8 @@ const AdminDashboard = () => {
         gap="20px"
       >
         {/* ROW 1 */}
+        {stats&&(
+        <>
         <Box
           gridColumn="span 3"
           backgroundColor={colors.primary[400]}
@@ -152,9 +165,9 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="2"
+            title={stats.total}
             subtitle="Total Campaigns"
-            progress="1"
+            progress={stats.total}
             // increase="+14%"
             icon={
               <EmailIcon
@@ -171,9 +184,9 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="0"
+            title={stats.pending}
             subtitle="Approval Pending"
-            progress="0.10"
+            progress={stats.pending/stats.total}
             // increase="+21%"
             icon={
               <PendingActionsOutlinedIcon
@@ -190,9 +203,9 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="3"
+            title={stats.approved}
             subtitle="Campaigns Sent"
-            progress="0.30"
+            progress={stats.approved/stats.total}
             // increase="+5%"
             icon={
               <MarkEmailReadOutlinedIcon
@@ -220,7 +233,8 @@ const AdminDashboard = () => {
             }
           />
         </Box>
-
+        </>
+        )}
         {/* ROW 2 */}
         <Box
           gridColumn="span 8"

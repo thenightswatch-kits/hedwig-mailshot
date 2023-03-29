@@ -1,5 +1,6 @@
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
+import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import MarkEmailReadOutlinedIcon from '@mui/icons-material/MarkEmailReadOutlined';
@@ -7,71 +8,97 @@ import SmsFailedOutlinedIcon from '@mui/icons-material/SmsFailedOutlined';
 import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
 import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
+import GeographyChart from "../../components/GeographyChart";
+import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import { mockDataContacts } from "../../data/mockData";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import ProgressCircle from "../../components/ProgressCircle";
+import { useEffect, useState } from "react";
 
 const AdminDashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  const [campaign, setCampaign] = useState();
+  const [group, setGroup] = useState();
+  const [stats, setStats] = useState();
+  useEffect(() => {
+    const getCampaignData = async () => {
+      const response = await fetch('http://45.79.120.122:8000/api/campaign/', {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const res = await response.json();
+      setCampaign(res.filter((e)=>{
+        if(e.status != 'pending'){
+          return e
+        }
+      }))
+      console.log(res)
+    }
+    const getGroupData = async () => {
+      const response = await fetch('http://45.79.120.122:8000/api/group', {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const res = await response.json();
+      console.log(res)
+      setGroup(res)
+    }
+    const getStatsData = async () => {
+      const response = await fetch('http://45.79.120.122:8000/api/stats/', {
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const res = await response.json();
+      console.log(res)
+      setStats(res)
+    }
+    
+    // getGroupData();
+    getCampaignData();
+    getStatsData()
+  }, [])
   
-
-
-  const templates = [
-    {
-      txId: "Warning",
-      // user: "aberdohnny",
-      date: "400 emails",
-      cost: "Taluk",
-    },
-    {
-      txId: "News",
-      // user: "aberdohnny",
-      date: "400 emails",
-      cost: "Taluk",
-    },
-    {
-      txId: "Alert",
-      // user: "aberdohnny",
-      date: "400 emails",
-      cost: "Taluk",
-    },
-  ];
-
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Campaign ID" },
+
     {
-      field: "name",
-      headerName: "Name",
+      field: "title",
+      headerName: "title",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "  ",
+      field: "user_id",
       headerName: "User",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "phone",
-      headerName: "Emails",
+      field: "template_id",
+      headerName: "Template",
       flex: 1,
     },
     {
-      field: "email",
-      headerName: "Schedule Date",
+      field: "type",
+      headerName: "Type",
       flex: 1,
     },
     {
-      field: "address",
-      headerName: "Progress",
+      field: "started_at",
+      headerName: "Started At",
       flex: 1,
     },
     {
-      field: "city",
-      headerName: "Fail Ratio",
+      field: "ended_at",
+      headerName: "Ended At",
+      flex: 1,
+    },
+    {
+      field: "status",
+      headerName: "Status",
       flex: 1,
     },
     {
@@ -102,7 +129,7 @@ const AdminDashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome User" />
+        <Header title="DASHBOARD" subtitle="Welcome ADMIN" />
 
         {/* <Box>
           <Button
@@ -128,6 +155,8 @@ const AdminDashboard = () => {
         gap="20px"
       >
         {/* ROW 1 */}
+        {stats&&(
+        <>
         <Box
           gridColumn="span 3"
           backgroundColor={colors.primary[400]}
@@ -136,9 +165,9 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
+            title={stats.total}
             subtitle="Total Campaigns"
-            progress="1"
+            progress={stats.total}
             // increase="+14%"
             icon={
               <EmailIcon
@@ -155,9 +184,9 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="431,225"
+            title={stats.pending}
             subtitle="Approval Pending"
-            progress="0.10"
+            progress={stats.pending/stats.total}
             // increase="+21%"
             icon={
               <PendingActionsOutlinedIcon
@@ -174,9 +203,9 @@ const AdminDashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
+            title={stats.approved}
             subtitle="Campaigns Sent"
-            progress="0.30"
+            progress={stats.approved/stats.total}
             // increase="+5%"
             icon={
               <MarkEmailReadOutlinedIcon
@@ -204,7 +233,8 @@ const AdminDashboard = () => {
             }
           />
         </Box>
-
+        </>
+        )}
         {/* ROW 2 */}
         <Box
           gridColumn="span 8"
@@ -261,17 +291,10 @@ const AdminDashboard = () => {
             p="15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Templates
+              Groups
             </Typography>
-            <Box
-                // backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
-              >
-                + Add
-              </Box>
           </Box>
-          {templates.map((transaction, i) => (
+          {group&&group.map((transaction, i) => (
             <Box
               key={`${transaction.txId}-${i}`}
               display="flex"
@@ -288,13 +311,17 @@ const AdminDashboard = () => {
                 >
                   {transaction.txId}
                 </Typography>
+                <Typography color={colors.grey[100]}>
+                  {transaction.name}
+                </Typography>
               </Box>
+              <Box color={colors.grey[100]}>1000</Box>
               <Box
                 backgroundColor={colors.greenAccent[500]}
                 p="5px 10px"
                 borderRadius="4px"
               >
-                View
+                {transaction.permission}
               </Box>
             </Box>
           ))}
@@ -336,11 +363,13 @@ const AdminDashboard = () => {
           },
         }}
       >
-        <DataGrid
-          rows={mockDataContacts}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
-        />
+        {campaign&&(
+                  <DataGrid
+                  rows={campaign}
+                  columns={columns}
+                  components={{ Toolbar: GridToolbar }}
+                />
+        )}
       </Box>
     </Box>
     </Box>

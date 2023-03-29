@@ -9,7 +9,7 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate()
   const handleFormSubmit = async (values) => {
-    const response = await fetch('http://localhost:8000/api/template', {
+    const response = await fetch('http://45.79.120.122:8000/api/template', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

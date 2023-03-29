@@ -18,7 +18,7 @@ const AdminRecipients = () => {
   const [campaign, setCampaign] = useState();
   useEffect(() => {
     const getCampaignData = async () => {
-      const response = await fetch('http://localhost:8000/api/recipients/', {
+      const response = await fetch('http://45.79.120.122:8000/api/recipients/', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
@@ -41,7 +41,7 @@ const AdminRecipients = () => {
         results.data.map(async (e) => {
           console.log(e)
           e['failed'] = 0
-          const response = await fetch('http://localhost:8000/api/recipients/', {
+          const response = await fetch('http://45.79.120.122:8000/api/recipients/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -49,7 +49,7 @@ const AdminRecipients = () => {
           });
           console.log(response)
         })
-        navigate(0)
+        // navigate(0)
       },
     });
   };

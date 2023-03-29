@@ -23,7 +23,7 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const response = await fetch('http://localhost:8000/api/login', {
+    const response = await fetch('http://45.79.120.122:8000/api/login', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

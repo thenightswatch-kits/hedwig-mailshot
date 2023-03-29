@@ -13,7 +13,7 @@ const Form = () => {
 
   const handleFormSubmit = async (values) => {
     console.log(values);
-    const response = await fetch('http://localhost:8000/api/register', {
+    const response = await fetch('http://45.79.120.122:8000/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

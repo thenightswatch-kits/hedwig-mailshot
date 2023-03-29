@@ -21,7 +21,7 @@ const Topbar = () => {
 
   const handleClick = async(event) => {
     
-    const response = await fetch('http://localhost:8000/api/logout', {
+    const response = await fetch('http://45.79.120.122:8000/api/logout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

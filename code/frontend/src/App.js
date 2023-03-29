@@ -10,7 +10,7 @@ function App() {
   const [content, setContent] = useState();
   useEffect(() => {
     const signin = async () => {
-      const response = await fetch('http://localhost:8000/api/user', {
+      const response = await fetch('http://45.79.120.122:8000/api/user', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });

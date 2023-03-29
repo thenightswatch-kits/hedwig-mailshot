@@ -13,7 +13,7 @@ const AdminGroups = () => {
   const [group, setGroup] = useState();
   useEffect(() => {
     const getGroupData = async () => {
-      const response = await fetch('http://localhost:8000/api/group', {
+      const response = await fetch('http://45.79.120.122:8000/api/group', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });

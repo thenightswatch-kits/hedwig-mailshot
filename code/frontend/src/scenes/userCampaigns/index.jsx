@@ -16,7 +16,7 @@ const Team = () => {
   const [campaign, setCampaign] = useState();
   useEffect(() => {
     const getCampaignData = async () => {
-      const response = await fetch('http://localhost:8000/api/campaign/', {
+      const response = await fetch('http://45.79.120.122:8000/api/campaign/', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });

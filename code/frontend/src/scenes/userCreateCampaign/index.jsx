@@ -15,7 +15,7 @@ const Form = () => {
   const [templates, setTemplates] = useState();
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch('http://localhost:8000/api/template', {
+      const response = await fetch('http://45.79.120.122:8000/api/template', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
@@ -41,7 +41,7 @@ const Form = () => {
         type: values.type,
       })
     }
-    const response = await fetch('http://localhost:8000/api/campaign/', {
+    const response = await fetch('http://45.79.120.122:8000/api/campaign/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

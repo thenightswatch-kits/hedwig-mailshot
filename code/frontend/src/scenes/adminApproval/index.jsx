@@ -17,7 +17,7 @@ const AdminApproval = () => {
   const [campaign, setCampaign] = useState();
   useEffect(() => {
     const getCampaignData = async () => {
-      const response = await fetch('http://localhost:8000/api/campaign/', {
+      const response = await fetch('http://45.79.120.122:8000/api/campaign/', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
@@ -36,7 +36,7 @@ const AdminApproval = () => {
 
   const handleApprove = async (id, status) =>{
     const data = JSON.stringify({'id':id,'status':status})
-    const respones = await fetch('http://localhost:8000/api/campaign/approve/',{
+    const respones = await fetch('http://45.79.120.122:8000/api/campaign/approve/',{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
